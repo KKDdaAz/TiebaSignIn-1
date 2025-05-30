@@ -232,5 +232,5 @@ public void send(String sckey) {
     } catch (Exception e) { // <-- 在这里添加一个 catch 块来捕获异常
         LOGGER.error("发送Server酱推送失败 -- " + e.getMessage()); // 打印错误信息
     }
-}
+
 }
