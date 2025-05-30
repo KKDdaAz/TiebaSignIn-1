@@ -1,5 +1,3 @@
-
-      
 package top.srcrs;
 
 import com.alibaba.fastjson.JSONArray;
@@ -206,31 +204,31 @@ public class Run {
      * @author srcrs
      * @Time 2020-10-31
      */
-public void send(String sckey) {
-    String text = "总: " + followNum + " - ";
-    text += "成功: " + success.size() + " 失败: " + (followNum - success.size());
-    String desp = "共 " + followNum + " 贴吧\n\n";
-    desp += "成功: " + success.size() + " 失败: " + (followNum - success.size());
-    String body = "text=" + text + "&desp=" + "TiebaSignIn运行结果\n\n" + desp;
-    StringEntity entityBody = new StringEntity(body, "UTF-8");
-    HttpClient client = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost("https://sctapi.ftqq.com/" + sckey + ".send");
-    httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    httpPost.setEntity(entityBody);
-    HttpResponse resp = null;
-    String respContent = null;
-    try {
-        resp = client.execute(httpPost);
-        HttpEntity entity = null;
-        if (resp.getStatusLine().getStatusCode() < 400) {
-            entity = resp.getEntity();
-        } else {
-            entity = resp.getEntity();
+    public void send(String sckey) {
+        String text = "总: " + followNum + " - ";
+        text += "成功: " + success.size() + " 失败: " + (followNum - success.size());
+        String desp = "共 " + followNum + " 贴吧\n\n";
+        desp += "成功: " + success.size() + " 失败: " + (followNum - success.size());
+        String body = "text=" + text + "&desp=" + "TiebaSignIn运行结果\n\n" + desp;
+        StringEntity entityBody = new StringEntity(body, "UTF-8");
+        HttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("https://sctapi.ftqq.com/" + sckey + ".send");
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(entityBody);
+        HttpResponse resp = null;
+        String respContent = null;
+        try {
+            resp = client.execute(httpPost);
+            HttpEntity entity = null;
+            if (resp.getStatusLine().getStatusCode() < 400) {
+                entity = resp.getEntity();
+            } else {
+                entity = resp.getEntity();
+            }
+            respContent = EntityUtils.toString(entity, "UTF-8");
+            LOGGER.info("server酱推送正常");
+        } catch (Exception e) {
+            LOGGER.error("发送Server酱推送失败 -- " + e.getMessage());
         }
-        respContent = EntityUtils.toString(entity, "UTF-8");
-        LOGGER.info("server酱推送正常");
-    } catch (Exception e) { // <-- 在这里添加一个 catch 块来捕获异常
-        LOGGER.error("发送Server酱推送失败 -- " + e.getMessage()); // 打印错误信息
     }
-
 }
