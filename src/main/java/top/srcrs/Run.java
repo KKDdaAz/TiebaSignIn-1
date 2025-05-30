@@ -230,9 +230,7 @@ public class Run {
             }
             respContent = EntityUtils.toString(entity, "UTF-8");
             LOGGER.info("server酱推送正常");
-        } catch (Exception e) {
-            LOGGER.error("server酱发送失败 -- " + e);
-        }
+        } 
     } 
     
 }
