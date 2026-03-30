@@ -3,7 +3,11 @@ name: Daily Tieba Sign-In
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 22 * * *'  # 北京时间 6:30 (UTC+8)
+    - cron: '30 22 * * *'  # 北京时间 6:30
+
+# 第一处新增：必须开启写入权限，否则保活步骤会报错
+permissions:
+  contents: write
 
 jobs:
   signin:
@@ -18,7 +22,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '8'
-          cache: 'maven'  # 使用官方推荐的 Maven 依赖缓存
+          cache: 'maven'
 
       - name: Build and execute
         env:
@@ -28,3 +32,16 @@ jobs:
           mvn -B compile exec:java \
             -Dexec.mainClass="top.srcrs.Run" \
             -Dexec.args="$BDUSS $SCKEY"
+
+      # 第二处新增：保活逻辑
+      - name: Keepalive Workflow
+        run: |
+          git config --local user.email "github-actions[bot]@github.com"
+          git config --local user.name "github-actions[bot]"
+          # 设定每周一自动提交一次代码，重置 60 天倒计时
+          if [ $(date +%u) -eq 1 ]; then
+            echo "Last run: $(date)" > heartbeat.txt
+            git add heartbeat.txt
+            git commit -m "chore: keepalive workflow (auto-commit)"
+            git push
+          fi
